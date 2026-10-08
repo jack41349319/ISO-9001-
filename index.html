@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07080a">
+  <title>旅遊散策</title>
+  <style>
+    :root {
+      --ink: #ededf0;
+      --muted: #a7a9b0;
+      --paper: #121419;
+      --cream: #07080a;
+      --card: #1b1e24;
+      --accent: #e12d36;
+      --accent-soft: #47161b;
+      --line: #3b3f49;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.48);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(225, 45, 54, 0.2), transparent 38%),
+        linear-gradient(145deg, #08090c 0%, #111318 52%, #07080a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.7;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .page {
+      width: min(100% - 28px, 760px);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    header {
+      padding: 30px 22px 26px;
+      border-radius: 22px;
+      border: 1px solid #474b56;
+      background: linear-gradient(145deg, #20232a 0%, #111318 58%, #2b1115 100%);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: #ff4a52;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 9vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: 0.16em;
+      text-shadow: 0 0 18px rgba(225, 45, 54, 0.42);
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .meeting-point {
+      margin: 12px 0 0;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .meeting-qr {
+      display: block;
+      width: min(100%, 220px);
+      height: auto;
+      margin: 14px auto 0;
+      padding: 8px;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .notice {
+      margin: 18px 2px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(7, 8, 10, 0.58);
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .auth-panel {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #59606c;
+      border-radius: 16px;
+      background: rgba(7, 8, 10, 0.72);
+      text-align: left;
+    }
+
+    .auth-panel[hidden], #protected-content[hidden] { display: none; }
+
+    .auth-panel h2 { margin: 0 0 4px; font-size: 1.15rem; }
+    .auth-panel p { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+
+    .auth-form { display: grid; gap: 10px; }
+    .auth-form label { color: var(--muted); font-size: 0.85rem; }
+    .auth-form input {
+      width: 100%;
+      margin-top: 4px;
+      padding: 11px 12px;
+      border: 1px solid #555b68;
+      border-radius: 9px;
+      color: var(--ink);
+      background: #17191e;
+      font: inherit;
+    }
+
+    .auth-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+    .auth-actions button, .session-bar button {
+      padding: 9px 13px;
+      border: 1px solid #ff5660;
+      border-radius: 9px;
+      color: #fff;
+      background: #a82029;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .auth-actions button[type="button"], .session-bar button {
+      border-color: #59606c;
+      background: #252932;
+    }
+
+    .auth-status { min-height: 1.5em; margin-top: 10px !important; color: #ffb8bc !important; }
+
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 2px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    main { margin-top: 24px; }
+
+    .day {
+      margin-bottom: 24px;
+      padding: 22px 16px 8px;
+      border-radius: 20px;
+      border: 1px solid #30343d;
+      background: linear-gradient(145deg, #17191f 0%, #0f1115 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .day-heading {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 0 6px 18px;
+    }
+
+    .day-number {
+      display: grid;
+      width: 43px;
+      height: 43px;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      color: #fff;
+      border: 1px solid #ff5660;
+      background: linear-gradient(145deg, #f0444c, #921b23);
+      box-shadow: 0 0 14px rgba(225, 45, 54, 0.3);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: 0.05em;
+    }
+
+    .day-note {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .stop {
+      position: relative;
+      margin: 0 0 14px;
+      padding: 16px 15px 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(145deg, #24272e 0%, #17191e 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .stop:last-child { margin-bottom: 10px; }
+
+    .stop::before {
+      content: "";
+      position: absolute;
+      top: 19px;
+      left: -5px;
+      width: 9px;
+      height: 9px;
+      border: 3px solid var(--paper);
+      border-radius: 50%;
+      background: #ef3b44;
+      box-shadow: 0 0 8px rgba(239, 59, 68, 0.55);
+    }
+
+    .stop-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 3px;
+    }
+
+    .time {
+      color: var(--accent);
+      font-size: 0.98rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .place {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 800;
+      line-height: 1.4;
+      letter-spacing: 0.03em;
+    }
+
+    .description {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    footer {
+      padding: 3px 8px 0;
+      color: var(--muted);
+      font-size: 0.83rem;
+      text-align: center;
+    }
+
+    @media (min-width: 600px) {
+      .page { padding-top: 42px; }
+      .day { padding-left: 24px; padding-right: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <p class="eyebrow">HEAVY METAL TRAVEL · 2 DAYS 1 NIGHT</p>
+      <h1>旅遊散策</h1>
+      <p class="subtitle">台南兩天一夜｜慢慢走、好好吃，把台南的午後留給彼此。</p>
+      <p class="meeting-point">集合地點：天溪園踩格子</p>
+      <img class="meeting-qr" src="./assets/tainan-trip-qr.png" alt="集合地點 QR 碼">
+      <p class="notice">行程中的店名與時間目前是示意版本，之後可以再換成實際安排。</p>
+      <section class="auth-panel" id="auth-panel" aria-labelledby="auth-title">
+        <h2 id="auth-title">登入後查看行程</h2>
+        <p>使用已建立的 Supabase Auth 帳號登入；不開放網站直接註冊。</p>
+        <form class="auth-form" id="auth-form">
+          <label>電子郵件<input id="email" name="email" type="email" autocomplete="email" required></label>
+          <label>密碼<input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required></label>
+          <div class="auth-actions">
+            <button type="submit" data-action="sign-in">登入</button>
+          </div>
+        </form>
+        <p class="auth-status" id="auth-status" role="status" aria-live="polite"></p>
+      </section>
+      <div class="session-bar" id="session-bar" hidden>
+        <span id="session-label"></span>
+        <button type="button" id="sign-out">登出</button>
+      </div>
+    </header>
+
+    <main id="protected-content" hidden>
+      <section class="day" aria-labelledby="day-one-title">
+        <div class="day-heading">
+          <div class="day-number" aria-hidden="true">1</div>
+          <div>
+            <h2 id="day-one-title">第一天｜老城散步</h2>
+            <p class="day-note">抵達台南後，從小吃與巷弄開始。</p>
+          </div>
+        </div>
+
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意早餐店</p><span class="time">09:30</span></div>
+          <p class="description">先吃一份熱騰騰的在地早餐，補充今天的散步能量。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意古蹟景點</p><span class="time">11:00</span></div>
+          <p class="description">逛逛紅磚老建築，順手拍幾張有台南味道的照片。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意午餐小吃</p><span class="time">13:00</span></div>
+          <p class="description">挑一間人氣小吃店，安排一頓不用趕時間的午餐。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意老街甜點店</p><span class="time">15:30</span></div>
+          <p class="description">在老街邊吃甜點、喝飲料，留一段自由聊天的午後。</p>
+        </article>
+      </section>
+
+      <section class="day" aria-labelledby="day-two-title">
+        <div class="day-heading">
+          <div class="day-number" aria-hidden="true">2</div>
+          <div>
+            <h2 id="day-two-title">第二天｜城市與海風</h2>
+            <p class="day-note">睡飽再出發，收進台南的另一種風景。</p>
+          </div>
+        </div>
+
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意早午餐店</p><span class="time">10:00</span></div>
+          <p class="description">用一頓舒服的早午餐開場，順便交換昨天最好玩的片段。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意文創園區</p><span class="time">12:00</span></div>
+          <p class="description">看看展覽與選物，把旅程中的喜歡帶一點回家。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意海邊景點</p><span class="time">15:00</span></div>
+          <p class="description">到海邊吹吹風，讓行程留白，也替旅程拍一張合照。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">示意晚餐店</p><span class="time">18:00</span></div>
+          <p class="description">用一頓豐盛晚餐收尾，再一起確認下次要去哪裡玩。</p>
+        </article>
+      </section>
+
+      <section class="day" aria-labelledby="packing-title">
+        <div class="day-heading">
+          <div class="day-number" aria-hidden="true">✓</div>
+          <div>
+            <h2 id="packing-title">行前提醒</h2>
+            <p class="day-note">出發前一起確認這三件事。</p>
+          </div>
+        </div>
+
+        <article class="stop">
+          <div class="stop-top"><p class="place">天氣</p><span class="time">示意</span></div>
+          <p class="description">預計晴時多雲，白天溫暖，晚上可能有風。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">要帶的東西</p><span class="time">示意</span></div>
+          <p class="description">帶水、行動電源、防曬用品與輕便雨具。</p>
+        </article>
+        <article class="stop">
+          <div class="stop-top"><p class="place">集合時間</p><span class="time">示意</span></div>
+          <p class="description">第一天上午 09:00 在車站出口集合。</p>
+        </article>
+      </section>
+    </main>
+
+    <footer>店名與時間可直接在這個檔案中修改。</footer>
+  </div>
+  <script src="./supabase-config.js"></script>
+  <script type="module" src="./auth.js"></script>
+</body>
+</html>
